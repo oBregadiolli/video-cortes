@@ -1,0 +1,100 @@
+# ⚡ INÍCIO RÁPIDO - FIFA CORTES
+
+## 1️⃣ INSTALAR (PRIMEIRA VEZ APENAS)
+
+### A) Node.js
+```
+1. Vá em: https://nodejs.org
+2. Clique em "LTS" (verde)
+3. Execute e clique "Next" em tudo
+4. ⚠️ REINICIE O COMPUTADOR
+```
+
+### B) FFmpeg
+```
+No PowerShell (como Admin):
+  choco install ffmpeg
+
+OU baixe manual em:
+  https://ffmpeg.org/download.html
+```
+
+### C) Dependências do Projeto
+```powershell
+cd C:\Users\Bregadiolli\Documents\FifaCortes
+npm install
+```
+
+---
+
+## 2️⃣ RODAR (TODA VEZ)
+
+```powershell
+cd C:\Users\Bregadiolli\Documents\FifaCortes
+npm start
+```
+
+Você verá:
+```
+║  Servidor rodando em:
+║  http://localhost:3000
+```
+
+---
+
+## 3️⃣ USAR
+
+1. Abra: http://localhost:3000
+2. Selecione um vídeo MP4
+3. Informe: Tempo Inicial (segundos)
+4. Informe: Tempo Final (segundos)
+5. Informe: Nome do arquivo
+6. Clique: ✂️ Cortar Vídeo
+7. Clique: ⬇️ Download
+
+---
+
+## ⏹️ PARAR
+
+```powershell
+Ctrl + C
+```
+
+---
+
+## 📁 ARQUIVOS
+
+```
+FifaCortes/
+├── index.js          ← Servidor
+├── package.json      ← Dependências
+├── public/           ← Interface web
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── outputs/          ← Vídeos cortados
+└── uploads/          ← Temporários
+```
+
+---
+
+## ❓ PROBLEMA?
+
+| Erro | Solução |
+|------|---------|
+| "node not found" | Instale Node.js e reinicie |
+| "ffmpeg not found" | Instale FFmpeg |
+| "Porta em uso" | Mude PORT em index.js |
+| Vídeo corrompido | Tente outro MP4 |
+
+---
+
+## 💾 VÍDEOS CORTADOS
+
+Estão em: `FifaCortes/outputs/`
+
+Download pela interface ou acesse direto a pasta.
+
+---
+
+**FIFA Cortes v1.0** - Pronto para cortar! ⚽

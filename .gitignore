@@ -1,0 +1,20 @@
+# Dependências do Node
+node_modules/
+package-lock.json
+
+# Arquivos temporários
+uploads/
+*.mp4
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema
+.env
+.env.local
