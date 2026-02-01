@@ -3,101 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA Cortes - Cortador de Vídeos MP4</title>
+    <title>FIFA Cortes - Editor de Vídeos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header>
-            <h1>⚽ FIFA Cortes</h1>
-            <p>Cortador de vídeos MP4 - Corte rápido e sem re-encode</p>
+            <h1>FIFA Cortes</h1>
+            <p>Editor de vídeos MP4 - Corte rápido e sem re-encode</p>
         </header>
 
         <!-- Main Content -->
         <main>
-            <!-- Formulário de Corte -->
-            <section class="cut-section">
-                <h2>Cortar Vídeo</h2>
+            <!-- Seção de Preview e Edição -->
+            <section class="editor-section">
+                <h2>Editor de Vídeo</h2>
 
                 <!-- Seleção de Arquivo -->
                 <div class="form-group">
-                    <label for="videoFile">📁 Selecionar arquivo MP4:</label>
-                    <input
-                        type="file"
-                        id="videoFile"
-                        accept=".mp4,video/mp4"
-                        required
-                    >
+                    <label for="videoFile">Selecionar arquivo MP4</label>
+                    <div class="file-input-wrapper">
+                        <input
+                            type="file"
+                            id="videoFile"
+                            accept=".mp4,video/mp4"
+                        >
+                        <span class="file-label">Clique para selecionar</span>
+                    </div>
                     <span class="file-info" id="fileInfo"></span>
                 </div>
 
-                <!-- Tempo Inicial -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="startTime">⏱️ Tempo Inicial (segundos):</label>
-                        <input
-                            type="number"
-                            id="startTime"
-                            min="0"
-                            step="0.1"
-                            placeholder="Ex: 5"
-                            required
-                        >
-                    </div>
-
-                    <!-- Tempo Final -->
-                    <div class="form-group">
-                        <label for="endTime">⏱️ Tempo Final (segundos):</label>
-                        <input
-                            type="number"
-                            id="endTime"
-                            min="0"
-                            step="0.1"
-                            placeholder="Ex: 25"
-                            required
-                        >
+                <!-- Video Player -->
+                <div id="playerContainer" class="player-container hidden">
+                    <video id="videoPreview" class="video-preview" controls></video>
+                    <div class="video-info">
+                        <span>Duração: <strong id="videoDuration">0:00</strong></span>
+                        <span>Posição: <strong id="videoTime">0:00</strong></span>
                     </div>
                 </div>
 
-                <!-- Nome do Arquivo -->
-                <div class="form-group">
-                    <label for="outputName">📝 Nome do arquivo final:</label>
-                    <input
-                        type="text"
-                        id="outputName"
-                        placeholder="Ex: gol_lindinho"
-                        required
-                    >
-                    <span class="hint">(será adicionado .mp4 automaticamente)</span>
-                </div>
+                <!-- Controles de Corte -->
+                <div id="cutControls" class="cut-controls hidden">
+                    <div class="time-inputs">
+                        <div class="time-input-group">
+                            <label for="startTime">Início (segundos)</label>
+                            <input type="number" id="startTime" min="0" step="0.1" value="0">
+                            <span class="time-display" id="startDisplay">0:00</span>
+                        </div>
+                        <div class="time-input-group">
+                            <label for="endTime">Fim (segundos)</label>
+                            <input type="number" id="endTime" min="0" step="0.1" value="0">
+                            <span class="time-display" id="endDisplay">0:00</span>
+                        </div>
+                    </div>
 
-                <!-- Botão Cortar -->
-                <button id="cutButton" class="btn btn-primary">
-                    ✂️ Cortar Vídeo
-                </button>
+                    <!-- Sliders Visuais -->
+                    <div class="slider-container">
+                        <input type="range" id="startSlider" class="slider start-slider" min="0" max="100" value="0">
+                        <input type="range" id="endSlider" class="slider end-slider" min="0" max="100" value="100">
+                        <div class="slider-track"></div>
+                    </div>
 
-                <!-- Mensagens -->
-                <div id="message" class="message hidden"></div>
-                <div id="progress" class="progress hidden">
-                    <div class="progress-bar"></div>
-                    <p id="progressText">Processando...</p>
+                    <!-- Nome do Arquivo -->
+                    <div class="form-group">
+                        <label for="outputName">Nome do arquivo final</label>
+                        <div class="output-name-wrapper">
+                            <input type="text" id="outputName" placeholder="Digite um nome" required>
+                            <span class="extension">.mp4</span>
+                        </div>
+                    </div>
+
+                    <!-- Botão Cortar -->
+                    <button id="cutButton" class="btn btn-primary">Cortar Vídeo</button>
+
+                    <!-- Mensagens -->
+                    <div id="message" class="message hidden"></div>
+                    <div id="progress" class="progress hidden">
+                        <div class="progress-bar"></div>
+                        <p id="progressText">Processando...</p>
+                    </div>
                 </div>
             </section>
 
-            <!-- Lista de Arquivos Cortados -->
+            <!-- Seção de Arquivos -->
             <section class="files-section">
-                <h2>📂 Vídeos Cortados</h2>
+                <div class="files-header">
+                    <h2>Vídeos Processados</h2>
+                    <button id="refreshButton" class="btn-icon" title="Atualizar">↻</button>
+                </div>
                 <div id="filesList" class="files-list">
                     <p class="loading">Carregando arquivos...</p>
                 </div>
-                <button id="refreshButton" class="btn btn-secondary">🔄 Atualizar</button>
             </section>
         </main>
 
         <!-- Footer -->
         <footer>
-            <p>FIFA Cortes v1.0 - Ferramenta local para corte de vídeos | FFmpeg</p>
+            <p>FIFA Cortes v2.0 - Ferramenta local para corte de vídeos | FFmpeg</p>
         </footer>
     </div>
 

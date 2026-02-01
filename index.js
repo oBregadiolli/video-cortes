@@ -38,12 +38,26 @@ const outputDir = process.env.NODE_ENV === 'production'
   ? path.join(os.tmpdir(), 'fifa-outputs')
   : path.join(__dirname, 'outputs');
 
+const metadataDir = process.env.NODE_ENV === 'production'
+  ? path.join(os.tmpdir(), 'fifa-metadata')
+  : path.join(__dirname, 'metadata');
+
+const thumbnailDir = process.env.NODE_ENV === 'production'
+  ? path.join(os.tmpdir(), 'fifa-thumbnails')
+  : path.join(__dirname, 'public', 'thumbnails');
+
 // Criar pastas se não existirem
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
+}
+if (!fs.existsSync(metadataDir)) {
+  fs.mkdirSync(metadataDir, { recursive: true });
+}
+if (!fs.existsSync(thumbnailDir)) {
+  fs.mkdirSync(thumbnailDir, { recursive: true });
 }
 
 console.log('📁 Pasta uploads:', uploadsDir);
@@ -148,11 +162,41 @@ app.post('/api/cut-video', upload.single('video'), (req, res) => {
 
         // Sucesso!
         console.log('✓ Vídeo cortado com sucesso:', safeName);
-        res.json({
-          success: true,
-          message: 'Vídeo cortado com sucesso!',
-          fileName: safeName,
-          downloadUrl: `/download/${safeName}`
+        
+        // Gerar thumbnail (frame no meio do corte)
+        const thumbnailFile = path.join(thumbnailDir, safeName.replace('.mp4', '.jpg'));
+        const thumbnailTimestamp = (end - start) / 2; // Meio do corte
+        
+        const thumbArgs = [
+          '-ss', thumbnailTimestamp.toString(),
+          '-i', outputPath,
+          '-vf', 'scale=320:180',
+          '-vframes', '1',
+          '-y',
+          thumbnailFile
+        ];
+        
+        execFile(ffmpegPath, thumbArgs, { maxBuffer: 10 * 1024 * 1024 }, (thumbErr) => {
+          // Salvar metadados (thumbnail pode falhar, mas não é crítico)
+          const metadata = {
+            fileName: safeName,
+            thumbnailFile: safeName.replace('.mp4', '.jpg'),
+            createdAt: new Date().toISOString(),
+            originalName: req.file.originalname,
+            duration: (end - start).toFixed(2),
+            startTime: start,
+            endTime: end
+          };
+          
+          const metadataFile = path.join(metadataDir, safeName.replace('.mp4', '.json'));
+          fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2));
+          
+          res.json({
+            success: true,
+            message: 'Vídeo cortado com sucesso!',
+            fileName: safeName,
+            downloadUrl: `/download/${safeName}`
+          });
         });
       } catch (err) {
         console.error('Erro ao processar resultado:', err);
